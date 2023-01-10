@@ -65,8 +65,7 @@ $statment = null;
     }
 
 
-//送信して受け取ったデータは$_POSTの中に自動的に入る。
-//投稿データがあるときだけログを表示する。
+//submit機能
 if (isset($_POST["submitButton"])) {
     //表示名の入力チェック
     if (empty($_POST["username"])) {
@@ -133,7 +132,7 @@ if (isset($_POST["submitButton"])) {
 }
 
 
-//DBからコメントデータを取得する
+//DBからデータを取得する
 $sql = "SELECT id ,username, comment, post_date ,edit FROM todotable ORDER BY post_date ASC";
 $message_array = $pdo->query($sql);
 
@@ -154,14 +153,13 @@ $pdo = null;
 </head>
 
 <body>
-    <h1 class="title">todolist</h1>
+    <h1 class="title">To Do List</h1>
     <hr>
     <div class="boardWrapper">
         <!-- メッセージ送信成功時 -->
         <?php if (!empty($success_message)) : ?>
             <p class="success_message"><?php echo $success_message; ?></p>
         <?php endif; ?>
-
         <!-- バリデーションチェック時 -->
         <?php if (!empty($error_message)) : ?>
             <?php foreach ($error_message as $value) : ?>
@@ -176,31 +174,31 @@ $pdo = null;
                     <article>
                         <div class="wrapper">    
                                 <form  action='' method="POST">
-                                    <input type="hidden" name="id" value="<?php echo $value['id'];?> ">
-                                         <button class ="deleteButton" type="submit"name="deleteButton" >done</button>      
+                                    <input type="hidden" name="id" value="<?php echo $value['id'];?> ">    
                                 <?php if (!$value['edit']) { ?>
-                                    <button class="editButton" type="submit" name="editButton">edit</button>
                                     <div class="nameArea"> 
-                                    <span>名前：</span>
-                                    <p class="username"><?php echo $value['username']; ?></p>
-                                </div>
-                                <div>
-                                    <time>：<?php echo date('Y/m/d H:i', strtotime($value['post_date'])); ?></time>
-                                    <p class="comment"><?php echo $value['comment']; ?></p>
-                                </div>
+                                        <button class ="deleteButton" type="submit"name="deleteButton" ><img src="check.png" alt="check.png"/></button>      
+                                        <p class="username"><?php echo $value['username']; ?></p>
+                                    </div>
+                                    <div class="deadline">
+                                        <img src="calender.png" alt="calender.jpg"/>
+                                        <time>deadline：<?php echo date('Y/m/d H:i', strtotime($value['post_date'])); ?></time>
+                                        <button class="editButton" type="submit" name="editButton"><img src="pencil.png" check="pencil.png"/></button>
+                                    </div>    
+                                        <p class="comment"><?php echo $value['comment']; ?></p>
                                 <?php } else { ?>
-                                <form method="POST" action="" class="formWrapper">
-                                    <input type="hidden" name='edit' value="<?php echo $value['edit'];?>">
-                                    <button class="editButton" type="submit" name="submitButton">submit</button>
-                                    <div class="nameArea"> 
-                                    <label for="usernameLabel">名前：</label>
-                                    <input type="text" name="username" value="<?php echo $value['username']; ?>">
-                                </div>
-                                <div>
-                                    <input type="date" value="<?php echo date('Y/m/d H:i', strtotime($value['post_date'])); ?>">
-                                    <input type=textarea class="commentTextArea" name="comment" value="<?php echo $value['comment']; ?>">
-                                </div>
-                                </form>
+                                    <form method="POST" action="" class="formWrapper">
+                                        <input type="hidden" name='edit' value="<?php echo $value['edit'];?>">
+                                        <button class="editButton" type="submit" name="submitButton">submit</button>
+                                        <div class="nameArea"> 
+                                            <label for="usernameLabel">名前：</label>
+                                            <input type="text" name="username" value="<?php echo $value['username']; ?>">
+                                        </div>
+                                        <div>
+                                            <input type="date" value="<?php echo date('Y/m/d H:i', strtotime($value['post_date'])); ?>">
+                                            <input type=textarea class="commentTextArea" name="comment" value="<?php echo $value['comment']; ?>">
+                                        </div>
+                                    </form>
                                 <?php }?>
                                 </form>
                         </div>
@@ -211,7 +209,7 @@ $pdo = null;
 
         <form method="POST"  action="" class="formWrapper">
             <div>
-            <p>Create New Schedule</p>
+            <p>Create New Task</p>
                 <button type="submit"  name="submitButton">submit</button>
                 <label for="usernameLabel">名前：</label>
                 <input type="text" name="username">
